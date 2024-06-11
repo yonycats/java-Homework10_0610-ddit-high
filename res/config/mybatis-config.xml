@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!-- 실제 운영환경에서는 현재 연습하는 것처럼 Connection을 연결했다가 닫았다가
+	  하면 운영에 큰 부담이 되고, 사용자 기준에서 너무 느려짐.
+	  그래서 커넥션풀이라는 것을 사용 -->
+	  
+<!-- 	 이 파일은 설정 파일 내에서 POOLED를 써서 mybatis 커넥션풀 기능을 사용하도록 설정하는 것 -->
+	  
+<!-- 	  mybatis 설정 파일에 오라클 접속정보 세팅하기 -->
+
+  <configuration>
+  
+  	<properties resource="db.properties" />
+  
+  	<environments default="dev">
+  		<environment id="dev"> <!-- 개발환경과 운영환경을 별도로 사용할 수 있음 (dev, real) -->
+  			<transactionManager type="JDBC" />
+  			<dataSource type="POOLED">
+  				<property name="driver" value="${driver}"/>
+  				<property name="url" value="${url}"/>
+  				<property name="username" value="${username}"/>
+  				<property name="password" value="${password}"/>  			
+  			</dataSource>
+  		</environment>
+  	</environments>
+  	
+  	
+  	<mappers>
+  		<mapper resource="mapper/member.xml" />
+  	</mappers>
+  	
+  	
+  </configuration>
