@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Board">
+
+
+	<insert id="insertBoard" parameterType="vo.BoardVO">
+		
+	INSERT INTO JDBC_BOARD (BOARD_NO, BOARD_TITLE, BOARD_WRITER, BOARD_DATE, BOARD_CONTENT) 
+	VALUES ( (SELECT NVL(MAX(BOARD_NO),0)+1 FROM JDBC_BOARD) , #{title}, #{writer}, SYSDATE, #{content})
+	
+	</insert>
+	
+	
+	<update id="updateBoard" parameterType="vo.BoardVO">
+		
+	UPDATE JDBC_BOARD
+	SET BOARD_TITLE = #{title}, BOARD_WRITER = #{writer},
+	BOARD_CONTENT = #{content}, BOARD_DATE = SYSDATE
+	WHERE BOARD_NO = #{no}
+	
+	</update>
+	
+	
+	<delete id="deleteBoard" parameterType="vo.BoardVO">
+		
+	DELETE FROM JDBC_BOARD
+	WHERE BOARD_NO = #{no}
+
+	</delete>
+	
+	
+	<select id="printAllBoard" parameterType="vo.BoardVO" resultType="vo.BoardVO">
+		
+	SELECT *
+	FROM (SELECT ROWNUM RN, B.*
+		  FROM (SELECT BOARD_NO no, BOARD_DATE "date", BOARD_WRITER writer, BOARD_TITLE title, BOARD_CONTENT content
+				FROM JDBC_BOARD ORDER BY BOARD_DATE) B)
+				WHERE RN BETWEEN #{prePage} AND #{nextPage}
+	
+	</select>
+	
+	
+	<select id="dateSearch" parameterType="String" resultType="vo.BoardVO">
+		
+	SELECT BOARD_NO no, BOARD_DATE "date", BOARD_WRITER writer, BOARD_TITLE title, BOARD_CONTENT content
+	FROM JDBC_BOARD
+	WHERE BOARD_DATE LIKE TO_DATE(#{date}, 'YYYY-MM-DD')
+	ORDER BY BOARD_DATE
+	
+	</select>
+
+	
+	<select id="writerSearch" parameterType="vo.BoardVO" resultType="vo.BoardVO">
+		
+	SELECT BOARD_NO no, BOARD_DATE "date", BOARD_WRITER writer, BOARD_TITLE title, BOARD_CONTENT content
+	FROM JDBC_BOARD
+	WHERE BOARD_WRITER LIKE #{writer}
+	ORDER BY BOARD_DATE
+	
+	</select>
+	
+	
+	<select id="titleSearch" parameterType="vo.BoardVO" resultType="vo.BoardVO">
+		
+	SELECT BOARD_NO no, BOARD_DATE "date", BOARD_WRITER writer, BOARD_TITLE title, BOARD_CONTENT content
+	FROM JDBC_BOARD
+	WHERE BOARD_TITLE LIKE #{title}
+	ORDER BY BOARD_DATE
+	
+	</select>
+	
+	
+	<select id="contentSearch" parameterType="vo.BoardVO" resultType="vo.BoardVO">
+		
+	SELECT BOARD_NO no, BOARD_DATE "date", BOARD_WRITER writer, BOARD_TITLE title, BOARD_CONTENT content
+	FROM JDBC_BOARD
+	WHERE BOARD_CONTENT LIKE #{content}
+	ORDER BY BOARD_DATE
+	
+	</select>
+
+</mapper>
